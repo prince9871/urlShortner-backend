@@ -41,4 +41,21 @@ async function url(req, res) {
   }
 }
 
-module.exports = { url };
+
+const getUrl = async function(req, res){
+  try {
+    let code = req.params
+    if(code.urlCode===":urlCode"){
+      return res.status(400).send({status: false, msg: "require urlCode"})
+    }
+    const checkUrl = await urlModel.findOne({urlCode: code.urlCode})
+    if(!checkUrl){
+      return res.status(404).send({status: false, msg: "urlCode not found"})
+    }
+    let longCode = checkUrl.longUrl
+    return res.status(302).send(`Found. Redirecting to: ${longCode}`)
+  } catch (error) {
+    return res.status(500).send({status: false, msg: error.message})
+  }
+}
+module.exports = { url, getUrl };
