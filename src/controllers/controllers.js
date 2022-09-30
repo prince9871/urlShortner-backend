@@ -30,7 +30,9 @@ async function url(req, res) {
         .send({ status: false, message: "invalid longUrl" });
     }
 
-    const urlDocument = await urlModel.findOne({ longUrl: data.longUrl });
+    const urlDocument = await urlModel
+      .findOne({ longUrl: data.longUrl })
+      .select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 });
     if (urlDocument) {
       return res.status(200).send({ status: true, data: urlDocument });
     }
@@ -39,8 +41,13 @@ async function url(req, res) {
     data.shortUrl = `http://localhost:3000/${data.urlCode}`;
 
     const urlDoc = await urlModel.create(data);
+    const doc=urlDoc.toObject()
+    delete doc["_id"]
+    delete doc["createdAt"]
+    delete doc["updatedAt"]
+    delete doc["__v"]
 
-    return res.status(201).send({ status: true, data: urlDoc });
+    return res.status(201).send({ status: true, data: doc });
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message });
   }
@@ -52,7 +59,7 @@ const getUrl = async function (req, res) {
     if (code.urlCode === ":urlCode") {
       return res.status(400).send({ status: false, msg: "required urlCode" });
     }
-    if(!shortId.isValid(code.urlCode)){
+    if (!shortId.isValid(code.urlCode)) {
       return res.status(400).send({ status: false, msg: "invalid urlCode" });
     }
     const checkUrl = await urlModel.findOne({ urlCode: code.urlCode });
