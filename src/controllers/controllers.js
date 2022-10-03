@@ -65,7 +65,7 @@ async function url(req, res) {
 
     let urlDocument = await GET_ASYNC(`${req.body.longUrl}`);
     if (urlDocument) {
-      return res.status(200).send(urlDocument);
+      return res.status(200).send({ status: true, data: urlDocument });
     }
     // else {
     //   let urlD = await urlModel
