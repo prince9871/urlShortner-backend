@@ -1,7 +1,7 @@
 const shortId = require("shortid");
 const urlModel = require("../models/urlModel");
-const validUrl = require("valid-url");
-const { isValidString } = require("../validations/validations");
+// const validUrl = require("valid-url");
+const { isValidString, isValidUrl } = require("../validations/validations");
 
 const redis = require("redis");
 
@@ -50,7 +50,7 @@ async function url(req, res) {
         .send({ status: false, message: "longUrl must be in string format" });
     }
 
-    if (!validUrl.isUri(data.longUrl)) {
+    if (!isValidUrl(data.longUrl)) {
       return res
         .status(400)
         .send({ status: false, message: "invalid longUrl" });
@@ -118,7 +118,7 @@ const getUrl = async function (req, res) {
     let longCode = checkUrl.longUrl;
 
     await SET_ASYNC(`${req.params.urlCode}`, JSON.stringify(longCode));
-    
+
     return res.status(302).redirect(longCode);
   } catch (error) {
     return res.status(500).send({ status: false, msg: error.message });

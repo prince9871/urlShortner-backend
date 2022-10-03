@@ -5,4 +5,10 @@ function isValidString(string) {
   return true;
 }
 
-module.exports = { isValidString };
+function isValidUrl(data) {
+  let urlRegex =
+    /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)$/;
+  return urlRegex.test(data);
+}
+
+module.exports = { isValidString, isValidUrl };
