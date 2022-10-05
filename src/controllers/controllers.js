@@ -21,6 +21,13 @@ redisClient.on("connect", async function () {
   console.log("Connected to Redis..");
 });
 
+// redisClient.flushall((err, success) => {
+//   if (err) {
+//     throw new Error(err);
+//   }
+//   console.log(success); // will be true if successfull
+// });
+
 //1. connect to the server
 //2. use the commands :
 
@@ -56,12 +63,6 @@ async function url(req, res) {
         .send({ status: false, message: "invalid longUrl" });
     }
 
-    // const urlDocument = await urlModel
-    //   .findOne({ longUrl: data.longUrl })
-    //   .select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 });
-    // if (urlDocument) {
-    //   return res.status(200).send({ status: true, data: urlDocument });
-    // }
 
     let urlDocument = await GET_ASYNC(`${req.body.longUrl}`);
     if (urlDocument) {
@@ -69,18 +70,18 @@ async function url(req, res) {
         .status(200)
         .send({ status: true, data: JSON.parse(urlDocument) });
     }
-    // else {
-    //   let urlD = await urlModel
-    //     .findOne({ longUrl: data.longUrl })
-    //     .select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 });
-    //   if (urlD) {
-    //     await SET_ASYNC(`${req.body.longUrl}`, JSON.stringify(urlD));
-    //     return res.status(700).send({ data: urlD });
-    //   }
-    // }
+    else {
+      let urlD = await urlModel
+        .findOne({ longUrl: data.longUrl })
+        .select({ _id: 0, createdAt: 0, updatedAt: 0, __v: 0 });
+      if (urlD) {
+        await SET_ASYNC(`${req.body.longUrl}`, JSON.stringify(urlD));
+        return res.status(200).send({ data: urlD });
+      }
+    }
 
     data.urlCode = shortId.generate(data.longUrl);
-    data.shortUrl = `http://localhost:3000/${data.urlCode}`;
+    data.shortUrl = `http://localhost:3000/${data.urlCode.toLowerCase()}`;
 
     const urlDoc = await urlModel.create(data);
     const doc = urlDoc.toObject();
