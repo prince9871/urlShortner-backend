@@ -108,7 +108,7 @@ const getUrl = async function (req, res) {
 
     let ckUrl = await GET_ASYNC(`${req.params.urlCode}`);
     if (ckUrl) {
-      return res.status(302).redirect(ckUrl);
+      return res.status(302).redirect(JSON.parse(ckUrl));
     }
 
     const checkUrl = await urlModel.findOne({ urlCode: code.urlCode });
