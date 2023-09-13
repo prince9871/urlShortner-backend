@@ -17,7 +17,7 @@ app.use('/',route)
 app.use(function(req,res){
     return res.status(400).send({status:false,msg:'Invalid Url'})
 })
-const prt=3000
-app.listen(prt,function(){
-    console.log('Express app is connected '+prt)
+const port=5000
+app.listen(port,function(){
+    console.log('Express app is connected '+port)
 })

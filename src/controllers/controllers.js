@@ -9,11 +9,11 @@ const { promisify } = require("util");
 
 //Connect to redis
 const redisClient = redis.createClient(
-  13489,
-  "redis-13489.c301.ap-south-1-1.ec2.cloud.redislabs.com",
+  17601,
+  "redis-17601.c301.ap-south-1-1.ec2.cloud.redislabs.com",
   { no_ready_check: true }
 );
-redisClient.auth("53kQRUXp3EYwFNgxmttXuVawmIr2ifmx", function (err) {
+redisClient.auth("M43DW3FzlsB5i0612E3rOnsElB56m8Lr", function (err) {
   if (err) throw err;
 });
 
@@ -39,6 +39,7 @@ const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 async function url(req, res) {
   try {
     const data = req.body;
+    console.log('body')
 
     if (Object.keys(data).length === 0) {
       return res.status(400).send({ status: false, message: "required data" });
